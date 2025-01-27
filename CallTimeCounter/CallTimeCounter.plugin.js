@@ -113,6 +113,21 @@ class Timer extends React.Component {
     }
 
     render() {
-        return React.createElement("div", { className: "voiceTimer" }, `Time elapsed: ${new Date(this.state.delta).toISOString().substr(11, 8)}`);
+        var YY = Math.floor(this.state.delta / 31556952000);
+        var MM = Math.floor(this.state.delta / 2629746000);
+        var DD = Math.floor(this.state.delta / 86400000);
+        var hh = Math.floor(this.state.delta / 3600000);
+        var mm = Math.floor(this.state.delta / 60000);
+        var ss = Math.floor((this.state.delta % 60000) / 1000);
+
+        let timeString = '';
+        if (YY > 0) timeString += `${YY}y `;
+        if (MM > 0) timeString += `${MM}m `;
+        if (DD > 0) timeString += `${DD}d `;
+        if (hh > 0) timeString += `${hh}h `;
+        if (mm > 0) timeString += `${mm}m `;
+        if (ss > 0) timeString += `${ss}s`;
+
+        return React.createElement("div", { className: "voiceTimer" }, `Time elapsed: ${timeString}`);
     }
 };
