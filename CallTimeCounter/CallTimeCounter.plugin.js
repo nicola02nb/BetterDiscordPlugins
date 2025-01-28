@@ -1,7 +1,7 @@
 /**
     * @name CallTimeCounter
     * @description Shows how much time you are in a voice chat.
-    * @version 0.0.8
+    * @version 1.0.0
     * @author QWERT
     * @source https://github.com/QWERTxD/BetterDiscordPlugins/blob/main/CallTimeCounter/CallTimeCounter.plugin.js
     * @updateUrl https://raw.githubusercontent.com/QWERTxD/BetterDiscordPlugins/main/CallTimeCounter/CallTimeCounter.plugin.js
@@ -9,15 +9,7 @@
     */
 
 const config = {
-    changelog: [
-        {
-            title: "Fixes",
-            type: "fixed",
-            items: [
-                "Fixed for BetterDiscord 1.8 update."
-            ]
-        }
-    ],
+    changelog: [],
     settings: [
         { type: "switch", id: "logSessionToFile", name: "Log session to file", note: "Logs the session time to a file in the plugin folder.", value: false },
     ]
@@ -30,6 +22,9 @@ const DiscordModules = Webpack.getModule(m => m.dispatch && m.subscribe);
 const ChannelStore = Webpack.getStore("ChannelStore");
 const GuildStore = Webpack.getStore("GuildStore");
 const SelectedChannelStore = Webpack.getStore("SelectedChannelStore");
+
+const textXsNormal = Webpack.getByKeys("text-xs/normal")["text-xs/normal"];
+const subtext = Webpack.getByKeys("subtext")["subtext"];
 
 const PanelSubtext = Webpack.getModule(m => m?.$$typeof?.toString() === "Symbol(react.forward_ref)"
     && m.render?.toString().includes("createHref"), { searchExports: true });
@@ -62,7 +57,7 @@ module.exports = class CallTimeCounter {
     start() {
         this.initSettings();
         this.patch();
-        this.BdApi.DOM.addStyle(`.voiceTimer { text-decoration: none !important; margin-top: 8px; }`);
+        this.BdApi.DOM.addStyle(`.voiceTimer {}`);
     }
 
     stop() {
@@ -73,9 +68,9 @@ module.exports = class CallTimeCounter {
     patch() {
         Patcher.before(this.meta.name, PanelSubtext, "render", (_, [props], ret) => {
             if (!props?.children?.props?.className?.includes("channel")) return;
-            props.children.props.children = [
-                props.children.props.children,
-                React.createElement(Timer, { className: "voiceTimer" })
+            props.children = [
+                props.children,
+                React.createElement(Timer, { className: `voiceTimer ${textXsNormal} ${subtext}` })
             ];
         });
     }
@@ -153,7 +148,7 @@ class Timer extends React.Component {
     }
 
     render() {
-        return React.createElement("div", { className: "voiceTimer" }, `Time elapsed: ${timeToString(this.state.delta)}`);
+        return React.createElement("div", { className: `voiceTimer ${textXsNormal} ${subtext}` }, `Time elapsed: ${timeToString(this.state.delta)}`);
     }
 
     logToFile() {
