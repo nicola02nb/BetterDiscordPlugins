@@ -1,12 +1,12 @@
 /**
-    * @name CallTimeCounter
-    * @description Shows how much time you are in a voice chat.
-    * @version 1.0.0
-    * @author QWERT
-    * @source https://github.com/QWERTxD/BetterDiscordPlugins/blob/main/CallTimeCounter/CallTimeCounter.plugin.js
-    * @updateUrl https://raw.githubusercontent.com/QWERTxD/BetterDiscordPlugins/main/CallTimeCounter/CallTimeCounter.plugin.js
-    * @website https://github.com/QWERTxD/BetterDiscordPlugins/tree/main/CallTimeCounter
-    */
+* @name CallTimeCounter
+* @description Shows how much time you are in a voice chat.
+* @version 1.0.0
+* @author QWERT
+* @source https://github.com/QWERTxD/BetterDiscordPlugins/blob/main/CallTimeCounter/CallTimeCounter.plugin.js
+* @updateUrl https://raw.githubusercontent.com/QWERTxD/BetterDiscordPlugins/main/CallTimeCounter/CallTimeCounter.plugin.js
+* @website https://github.com/QWERTxD/BetterDiscordPlugins/tree/main/CallTimeCounter
+*/
 
 const config = {
     changelog: [],
@@ -102,12 +102,11 @@ function timeToString(time) {
 class Timer extends React.Component {
     constructor(props) {
         super(props);
-        this.connected = this.connected.bind(this);
         this.state = {
             startTime: 0,
             delta: 0
         };
-        this.handleConnected = this.connected;
+        this.handleConnected = this.connected.bind(this);
     }
 
     connected(e) {
