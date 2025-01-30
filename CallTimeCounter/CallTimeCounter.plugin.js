@@ -24,7 +24,7 @@ const GuildStore = Webpack.getStore("GuildStore");
 const SelectedChannelStore = Webpack.getStore("SelectedChannelStore");
 
 const textXsNormal = Webpack.getByKeys("text-xs/normal")["text-xs/normal"];
-const subtext = Webpack.getByKeys("subtext")["subtext"];
+const subtext = Webpack.getModule(m => m.subtext && Object.keys(m).length === 1)["subtext"];
 
 const PanelSubtext = Webpack.getModule(m => m?.$$typeof?.toString() === "Symbol(react.forward_ref)"
     && m.render?.toString().includes("createHref"), { searchExports: true });
@@ -70,7 +70,7 @@ module.exports = class CallTimeCounter {
             if (!props?.children?.props?.className?.includes("channel")) return;
             props.children = [
                 props.children,
-                React.createElement(Timer, { className: `voiceTimer ${textXsNormal} ${subtext}` })
+                React.createElement(Timer)
             ];
         });
     }
@@ -147,7 +147,7 @@ class Timer extends React.Component {
     }
 
     render() {
-        return React.createElement("div", { className: `voiceTimer ${textXsNormal} ${subtext}` }, `Time elapsed: ${timeToString(this.state.delta)}`);
+        return React.createElement("div", { className: `${textXsNormal} ${subtext}` }, `Time elapsed: ${timeToString(this.state.delta)}`);
     }
 
     logToFile() {
