@@ -81,12 +81,13 @@ const path = require("path");
 var lastSavedTime = 0;
 
 function timeToString(time) {
-    var YY = Math.floor(time / 31556952000);
-    var MM = Math.floor(time / 2629746000);
-    var DD = Math.floor(time / 86400000);
-    var hh = Math.floor(time / 3600000);
-    var mm = Math.floor(time / 60000);
-    var ss = Math.floor((time % 60000) / 1000);
+    let date = new Date(time);
+    let ss = date.getSeconds();
+    let mm = date.getMinutes();
+    let hh = date.getHours() - 1;
+    let DD = date.getDate() - 1;
+    let MM = date.getMonth();
+    let YY = date.getFullYear() - 1970;
 
     let timeString = '';
     if (YY > 0) timeString += `${YY}y `;
