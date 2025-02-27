@@ -82,14 +82,14 @@ var lastSavedTime = 0;
 
 function timeToString(time) {
     let date = new Date(time);
-    let ss = date.getSeconds();
-    let mm = date.getMinutes();
-    let hh = date.getHours() - 1;
-    let DD = date.getDate() - 1;
-    let MM = date.getMonth();
-    let YY = date.getFullYear() - 1970;
-
-    let timeString = '';
+    let ss = date.getUTCSeconds();
+    let mm = date.getUTCMinutes();
+    let hh = date.getUTCHours();
+    let DD = date.getUTCDate() - 1;
+    let MM = date.getUTCMonth();
+    let YY = date.getUTCFullYear() - 1970;
+  
+    let timeString = "";
     if (YY > 0) timeString += `${YY}y `;
     if (MM > 0) timeString += `${MM}m `;
     if (DD > 0) timeString += `${DD}d `;
