@@ -24,7 +24,7 @@ const GuildStore = Webpack.getStore("GuildStore");
 const SelectedChannelStore = Webpack.getStore("SelectedChannelStore");
 
 const textXsNormal = Webpack.getModule(m => m["text-xs/normal"] && !m["avatar"] && !m["defaultColor"])["text-xs/normal"];
-const subtext = Webpack.getModules(m => m.subtext && Object.keys(m).length === 1)[1]["subtext"];
+const subtext = Webpack.getModules(m => m.subtext && Object.keys(m).length === 1)[0]["subtext"];
 
 const PanelSubtext = Webpack.getModule(m => m?.$$typeof?.toString() === "Symbol(react.forward_ref)"
     && m.render?.toString().includes("createHref"), { searchExports: true });
