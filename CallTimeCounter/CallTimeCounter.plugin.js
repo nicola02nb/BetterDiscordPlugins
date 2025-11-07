@@ -15,14 +15,14 @@ const config = {
     ]
 };
 
-var console = {};
-
-const { Webpack, Patcher, React } = BdApi;
+const { Webpack, Patcher, React, Data, UI, DOM } = BdApi;
 const DiscordModules = Webpack.getModule(m => m.dispatch && m.subscribe);
 const ChannelStore = Webpack.getStore("ChannelStore");
 const GuildStore = Webpack.getStore("GuildStore");
 const SelectedChannelStore = Webpack.getStore("SelectedChannelStore");
 
+const rtcClasses = Webpack.getByKeys('rtcConnectionStatus', 'ping');
+const panelContainerClasses = Webpack.getByKeys('connection', 'inner');
 const textXsNormal = Webpack.getModule(m => m["text-xs/normal"] && !m["avatar"] && !m["defaultColor"])["text-xs/normal"];
 const subtext = Webpack.getModules(m => m.subtext && Object.keys(m).length === 1)[0]["subtext"];
 
@@ -34,22 +34,20 @@ let lastVoice, lastState;
 module.exports = class CallTimeCounter {
     constructor(meta) {
         this.meta = meta;
-        this.BdApi = new BdApi(this.meta.name);
-        console = this.BdApi.Logger;
     }
 
     initSettings() {
-        config.settings[0].value = this.BdApi.Data.load("logSessionToFile") ?? false;
+        config.settings[0].value = Data.load(this.meta.name, "logSessionToFile") ?? false;
     }
 
     getSettingsPanel() {
-        return this.BdApi.UI.buildSettingsPanel({
+        return UI.buildSettingsPanel({
             settings: config.settings,
             onChange: (category, id, value) => {
                 if(id === "logSessionToFile") {
                     config.settings[0].value = value;
                 }
-                this.BdApi.Data.save(id, value);
+                Data.save(this.meta.name, id, value);
             }
         });
     }
@@ -57,19 +55,30 @@ module.exports = class CallTimeCounter {
     start() {
         this.initSettings();
         this.patch();
-        this.BdApi.DOM.addStyle(`.voiceTimer {}`);
+        DOM.addStyle(this.meta.name, `
+            .${rtcClasses.rtcConnectionStatus}, .${panelContainerClasses.inner}, .${panelContainerClasses.connection} {
+                height: fit-content;
+            }
+            .${panelContainerClasses.channel}:hover > div {
+                text-decoration: underline !important;
+            }
+            .voiceTimer {
+                font-size: 12px;
+            }
+        `);
     }
 
     stop() {
         Patcher.unpatchAll(this.meta.name);
-        this.BdApi.DOM.removeStyle();
+        DOM.removeStyle(this.meta.name);
     }
 
     patch() {
         Patcher.before(this.meta.name, PanelSubtext, "render", (_, [props], ret) => {
             if (!props?.children?.props?.className?.includes("channel")) return;
-            props.children = [
-                props.children,
+            if(!props?.children?.props?.children) return;
+            props.children.props.children = [
+                props.children.props.children,
                 React.createElement(Timer)
             ];
         });
